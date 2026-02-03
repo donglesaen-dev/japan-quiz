@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일본어 퀴즈 - Japanese Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🇯🇵 일본어 퀴즈</h1>
+            <p class="subtitle">Japanese Language Quiz</p>
+        </header>
+
+        <div id="start-screen" class="screen active">
+            <div class="welcome-card">
+                <h2>퀴즈에 오신 것을 환영합니다!</h2>
+                <p>일본어 실력을 테스트해보세요</p>
+                <button id="start-btn" class="btn btn-primary">퀴즈 시작하기</button>
+                <button id="contact-btn" class="btn btn-secondary" style="margin-top: 12px;">연락하기</button>
+            </div>
+        </div>
+
+        <div id="contact-screen" class="screen">
+            <div class="contact-card">
+                <h2>연락하기</h2>
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="contact-name">이름</label>
+                        <input type="text" id="contact-name" required placeholder="이름을 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-phone">연락처</label>
+                        <input type="tel" id="contact-phone" required placeholder="연락처를 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-email">이메일</label>
+                        <input type="email" id="contact-email" required placeholder="이메일을 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-message">메시지 (선택사항)</label>
+                        <textarea id="contact-message" rows="4" placeholder="메시지를 입력하세요"></textarea>
+                    </div>
+                    <div id="contact-feedback" class="feedback" style="display: none;"></div>
+                    <div class="form-actions">
+                        <button type="button" id="contact-cancel" class="btn btn-secondary">취소</button>
+                        <button type="submit" id="contact-submit" class="btn btn-primary">제출하기</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-header">
+                <div class="score-display">
+                    <span>점수: <span id="score">0</span></span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progress" class="progress-fill"></div>
+                </div>
+                <div class="question-counter">
+                    <span id="question-num">1</span> / <span id="total-questions">10</span>
+                </div>
+            </div>
+
+            <div class="quiz-content">
+                <div class="question-card">
+                    <div class="question-type" id="question-type"></div>
+                    <h2 id="question-text" class="question-text"></h2>
+                    <div id="question-hint" class="question-hint"></div>
+                </div>
+
+                <div id="options-container" class="options-container"></div>
+
+                <div id="input-container" class="input-container" style="display: none;">
+                    <input type="text" id="answer-input" placeholder="답을 입력하세요..." autocomplete="off">
+                    <button id="submit-answer" class="btn btn-primary">제출</button>
+                </div>
+
+                <div id="feedback" class="feedback"></div>
+
+                <div class="quiz-actions">
+                    <button id="next-btn" class="btn btn-secondary" style="display: none;">다음 문제</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="screen">
+            <div class="result-card">
+                <h2>퀴즈 완료!</h2>
+                <div class="result-score">
+                    <div class="score-circle">
+                        <span id="final-score">0</span>
+                        <span class="score-total">/ <span id="final-total">10</span></span>
+                    </div>
+                    <p class="score-percentage" id="score-percentage">0%</p>
+                </div>
+                <div class="result-message" id="result-message"></div>
+                <div class="result-actions">
+                    <button id="send-email-btn" class="btn btn-primary">성적표 이메일로 받기</button>
+                    <button id="restart-btn" class="btn btn-secondary" style="margin-top: 12px;">다시 시작하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="quiz-data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
