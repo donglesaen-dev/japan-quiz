@@ -6,33 +6,15 @@
     <title>일본어 퀴즈 - Japanese Quiz</title>
     <link rel="stylesheet" href="styles.css">
     
-    <!-- Google tag (gtag.js) - 최상단에 배치 -->
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-L04HCGDEE0"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-L04HCGDEE0', {
-        'send_page_view': true,
-        'page_path': window.location.pathname + window.location.search,
-        'page_title': document.title,
-        'page_location': window.location.href
-      });
-      
-      // 페이지 로드 확인
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-          console.log('Google Analytics initialized');
-        });
-      } else {
-        console.log('Google Analytics initialized');
-      }
+
+      gtag('config', 'G-L04HCGDEE0');
     </script>
-    <!-- Google Analytics noscript fallback -->
-    <noscript>
-      <iframe src="https://www.googletagmanager.com/ns.html?id=G-L04HCGDEE0"
-      height="0" width="0" style="display:none;visibility:hidden"></iframe>
-    </noscript>
 </head>
 <body>
     <div class="container">
