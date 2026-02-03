@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>일본어 퀴즈 - Japanese Quiz</title>
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L04HCGDEE0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-L04HCGDEE0');
+    </script>
 </head>
 <body>
     <div class="container">
@@ -35,8 +45,8 @@
                         <input type="tel" id="contact-phone" required placeholder="연락처를 입력하세요">
                     </div>
                     <div class="form-group">
-                        <label for="contact-email">이메일</label>
-                        <input type="email" id="contact-email" required placeholder="이메일을 입력하세요">
+                        <label for="contact-email">이메일 (선택사항)</label>
+                        <input type="email" id="contact-email" placeholder="이메일을 입력하세요 (선택사항)">
                     </div>
                     <div class="form-group">
                         <label for="contact-message">메시지 (선택사항)</label>

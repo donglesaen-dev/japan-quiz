@@ -262,8 +262,8 @@ async function handleContactSubmit(e) {
     const message = document.getElementById('contact-message').value.trim();
     const feedback = document.getElementById('contact-feedback');
     
-    if (!name || !phone || !email) {
-        feedback.textContent = '모든 필수 항목을 입력해주세요.';
+    if (!name || !phone) {
+        feedback.textContent = '이름과 연락처는 필수 항목입니다.';
         feedback.className = 'feedback incorrect';
         feedback.style.display = 'flex';
         return;
@@ -275,7 +275,9 @@ async function handleContactSubmit(e) {
     submitBtn.textContent = '전송 중...';
     
     try {
-        const response = await fetch('http://localhost:3000/api/contact', {
+        // Vercel 배포 시 자동으로 올바른 URL 사용
+        const apiUrl = window.location.origin;
+        const response = await fetch(`${apiUrl}/api/contact`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -286,7 +288,7 @@ async function handleContactSubmit(e) {
         const data = await response.json();
         
         if (response.ok) {
-            feedback.textContent = '연락 정보가 성공적으로 전송되었습니다!';
+            feedback.textContent = '연락 정보가 donglesaen@gmail.com으로 전송되었습니다!';
             feedback.className = 'feedback correct';
             feedback.style.display = 'flex';
             contactForm.reset();
@@ -315,11 +317,8 @@ async function handleSendScoreEmail() {
         return;
     }
     
-    const email = prompt('성적표를 받을 이메일 주소를 입력하세요:');
-    if (!email || !email.includes('@')) {
-        alert('유효한 이메일 주소를 입력해주세요.');
-        return;
-    }
+    // 항상 donglesaen@gmail.com으로 전송
+    const email = 'donglesaen@gmail.com';
     
     const btn = sendEmailBtn;
     const originalText = btn.textContent;
@@ -327,7 +326,9 @@ async function handleSendScoreEmail() {
     btn.textContent = '전송 중...';
     
     try {
-        const response = await fetch('http://localhost:3000/api/send-score', {
+        // Vercel 배포 시 자동으로 올바른 URL 사용
+        const apiUrl = window.location.origin;
+        const response = await fetch(`${apiUrl}/api/send-score`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -345,7 +346,7 @@ async function handleSendScoreEmail() {
         const data = await response.json();
         
         if (response.ok) {
-            alert('성적표가 이메일로 전송되었습니다!');
+            alert('성적표가 donglesaen@gmail.com으로 전송되었습니다!');
         } else {
             throw new Error(data.error || '전송 실패');
         }
