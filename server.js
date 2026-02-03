@@ -3,42 +3,19 @@ const cors = require('cors');
 const { Resend } = require('resend');
 
 const app = express();
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-
-if (!RESEND_API_KEY) {
-    console.error('⚠️  경고: RESEND_API_KEY 환경 변수가 설정되지 않았습니다.');
-    console.error('PowerShell에서 다음 명령어로 설정하세요:');
-    console.error('$env:RESEND_API_KEY="your_api_key_here"');
-}
-
-const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.use(cors());
 app.use(express.json());
 
-// 헬스 체크 엔드포인트
-app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'ok', 
-        hasApiKey: !!RESEND_API_KEY,
-        port: process.env.PORT || 3000
-    });
-});
-
 // 연락 정보 전송
 app.post('/api/contact', async (req, res) => {
     try {
-        if (!resend) {
-            return res.status(500).json({ error: 'Resend API 키가 설정되지 않았습니다. 서버 관리자에게 문의하세요.' });
-        }
-        
         const { name, phone, email, message } = req.body;
         
         if (!name || !phone || !email) {
             return res.status(400).json({ error: '모든 필수 항목을 입력해주세요.' });
         }
-        
-        console.log(`📧 연락 요청 수신: ${name} (${email})`);
         
         const emailContent = `
             <h2>새로운 연락 요청</h2>
@@ -58,32 +35,25 @@ app.post('/api/contact', async (req, res) => {
         });
         
         if (error) {
-            console.error('❌ Resend error:', error);
-            return res.status(500).json({ error: `이메일 전송 실패: ${error.message || '알 수 없는 오류'}` });
+            console.error('Resend error:', error);
+            return res.status(500).json({ error: '이메일 전송 실패' });
         }
         
-        console.log(`✅ 이메일 전송 성공: ${data.id}`);
         res.json({ success: true, messageId: data.id });
     } catch (error) {
-        console.error('❌ Server error:', error);
-        res.status(500).json({ error: `서버 오류가 발생했습니다: ${error.message}` });
+        console.error('Server error:', error);
+        res.status(500).json({ error: '서버 오류가 발생했습니다.' });
     }
 });
 
 // 성적표 이메일 전송
 app.post('/api/send-score', async (req, res) => {
     try {
-        if (!resend) {
-            return res.status(500).json({ error: 'Resend API 키가 설정되지 않았습니다. 서버 관리자에게 문의하세요.' });
-        }
-        
         const { email, score, total, percentage, message, date } = req.body;
         
         if (!email || score === undefined || !total) {
             return res.status(400).json({ error: '필수 정보가 누락되었습니다.' });
         }
-        
-        console.log(`📧 성적표 전송 요청: ${email} (${score}/${total})`);
         
         // 사용자에게 보낼 성적표 이메일
         const userEmailContent = `
@@ -117,11 +87,9 @@ app.post('/api/send-score', async (req, res) => {
         });
         
         if (userError) {
-            console.error('❌ Resend error (user):', userError);
-            return res.status(500).json({ error: `이메일 전송 실패: ${userError.message || '알 수 없는 오류'}` });
+            console.error('Resend error (user):', userError);
+            return res.status(500).json({ error: '이메일 전송 실패' });
         }
-        
-        console.log(`✅ 사용자 이메일 전송 성공: ${userData.id}`);
         
         // 관리자에게도 알림 전송
         const adminEmailContent = `
@@ -131,34 +99,22 @@ app.post('/api/send-score', async (req, res) => {
             <p><strong>완료 시간:</strong> ${date}</p>
         `;
         
-        try {
-            await resend.emails.send({
-                from: 'Japanese Quiz <onboarding@resend.dev>',
-                to: ['donglesaen@gmail.com'],
-                subject: `[일본어 퀴즈] 성적표 전송 - ${email}`,
-                html: adminEmailContent,
-            });
-            console.log(`✅ 관리자 알림 전송 성공`);
-        } catch (adminError) {
-            console.error('⚠️  관리자 알림 전송 실패 (무시):', adminError);
-            // 관리자 알림 실패는 무시하고 사용자 이메일은 성공했으므로 계속 진행
-        }
+        await resend.emails.send({
+            from: 'Japanese Quiz <onboarding@resend.dev>',
+            to: ['donglesaen@gmail.com'],
+            subject: `[일본어 퀴즈] 성적표 전송 - ${email}`,
+            html: adminEmailContent,
+        });
         
         res.json({ success: true, messageId: userData.id });
     } catch (error) {
-        console.error('❌ Server error:', error);
-        res.status(500).json({ error: `서버 오류가 발생했습니다: ${error.message}` });
+        console.error('Server error:', error);
+        res.status(500).json({ error: '서버 오류가 발생했습니다.' });
     }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`\n🚀 서버가 포트 ${PORT}에서 실행 중입니다.`);
-    console.log(`📍 API 엔드포인트: http://localhost:${PORT}`);
-    console.log(`🔑 Resend API 키: ${RESEND_API_KEY ? '✅ 설정됨' : '❌ 설정되지 않음'}`);
-    if (!RESEND_API_KEY) {
-        console.log(`\n⚠️  Resend API 키를 설정하려면:`);
-        console.log(`   PowerShell: $env:RESEND_API_KEY="your_api_key_here"`);
-        console.log(`   그 다음 서버를 재시작하세요.\n`);
-    }
+    console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
+    console.log(`Resend API 키가 설정되어 있는지 확인하세요.`);
 });

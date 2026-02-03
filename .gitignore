@@ -4,5 +4,3 @@ node_modules/
 .DS_Store
 dist/
 build/
-ai-code-tracking.db
-새 폴더/
